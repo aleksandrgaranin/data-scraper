@@ -10,30 +10,54 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="button" type="post"></div>
-    
-      <div class="container">
-        <table class="table table-striped table-dark">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-4">
+          <form method="POST" action="/">
+            {% csrf_token %}
+            <button class="btn btn-primary" type="submit">Scrape</button> 
+        </div>
+        <div class="col-md-4">
+          <a class="btn btn-warning" href="/delete">Delete</a> 
+        </div>
+      </div>
+        
+      <div class="row">
+        <div class="col-md-8">
+          <table class="table table-striped table-dark">
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">Id</th>
                 <th scope="col">Date</th>
                 <th scope="col">This Year</th>
                 <th scope="col">Last Yeat</th>
+                <th scope="col">Difference in %</th>
+                <th scope="col">Absolute %</th>
+
               </tr>
             </thead>
             <tbody>
+            {%for data in data_all%}
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <td>{{data.id}}</td>
+                <td>{{data.date}}</td>
+                <td>{{data.today}}</td>
+                <td>{{data.year_ago}}</td>
+                <td>{{data.year_ago}}</td>
+                <td>{{data.year_ago}}</td>
               </tr>
-              
+            {% endfor %}
             </tbody>
           </table>
-    {%for row in rows%}
-        {{row}}</br>
-    {% endfor %}
+        </div>
+      </div>
+    </div>
+    
+      <div class="container">
+        
+    
+        
+   
 </body>
 </html>
