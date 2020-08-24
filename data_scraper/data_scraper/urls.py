@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.scrape, name="scrape"),
     path('delete/',views.clear, name="clear"),
+    path('export-csv/', views.csv_database_write, name='csv_database_write'),
 ]

@@ -1,8 +1,12 @@
 from django.shortcuts import render
 import requests
 from bs4 import BeautifulSoup
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from .models import Date
+import csv
+import sqlite3
+
+
 # Create your views here.
 
 def scrape(request):
@@ -41,8 +45,9 @@ def scrape(request):
             date = date_mod
             today = int(rows[i][1].replace(",",""))
             year_ago = int(rows[i][2].replace(",",""))
+            difference = round(float((today/year_ago)*100),2)
             
-            Date.objects.create(date=date,today=today,year_ago=year_ago)
+            Date.objects.create(date=date,today=today,year_ago=year_ago,difference=difference)
         return HttpResponseRedirect('/')
     else:
         data_all = Date.objects.all()
@@ -52,3 +57,23 @@ def scrape(request):
 def clear(request):
     Date.objects.all().delete()
     return render(request,'scraper/result.html')
+
+
+
+def csv_database_write(request):
+    # Get all data from Date Databse Table
+    dates = Date.objects.all()
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="csv_dates_dbase_write.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['date', 'this_year', 'last_yeat', 'difference', 'absolute'])
+
+    for date in dates:
+        writer.writerow([date.date, date.today, date.year_ago, date.difference, date.absolute])
+
+    return response
+    
+
