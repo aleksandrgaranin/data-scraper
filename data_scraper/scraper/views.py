@@ -35,24 +35,25 @@ def scrape(request):
                 d = d + date_raw
                 y = d[ 4: ]
                 date_mod = y + "-" + d[:2 ] + "-" + d[ 2:4 ]
-            elif len(date_raw) == 6:
-                dat = date_raw[ 0 ] + "0" + date_raw[ 2: ] 
-                d = d + dat
-                date_mod = y + "-" + d[ :2 ] + "-" + d[ 3:5 ] 
+            elif len(date_raw) == 6:                
+                dat = d + date_raw[ 0 ] + d + date_raw[ 1: ]    
+                y = dat[ 4: ]
+                print(dat)            
+                date_mod = y + "-" + dat[ :2 ] + "-" + dat[ 2:4 ] 
             else:
                 y = date_raw[ 3: ]
                 date_mod = y + "-" + date_raw[ :1 ]+ "-" + date_raw[ 2:3 ]
             date = date_mod
             today = int(rows[ i ][ 1 ].replace(",",""))
             year_ago = int(rows[ i ][ 2 ].replace(",",""))
+
             today_day_before = int(rows[ i-1 ][ 1 ].replace(",",""))
             year_ago_day_before = int(rows[ i-1 ][ 2 ].replace(",",""))
+            
             difference = round(float((today / year_ago) * 100),2)
-            if i == 0:
-                abs_diff = 0
-            else:
-                abs_diff = difference - round(float((today_day_before / year_ago_day_before) * 100),2)
-                abs_diff = round(abs_diff, 2)
+          
+            abs_diff = round(float((today_day_before / year_ago_day_before) * 100),2) - difference
+            abs_diff = round(abs_diff, 2)
 
             Date.objects.create(date=date,today=today,year_ago=year_ago,difference=difference,absolute=abs_diff)
         return HttpResponseRedirect('/')
