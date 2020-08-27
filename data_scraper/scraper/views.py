@@ -28,6 +28,8 @@ def scrape(request):
                 rows.remove(row)      
             z=z+1
         
+        rows = rows[::-1]
+
         for i in range(z):
             date_raw = rows[ i ][ 0 ].replace("/","")
             d = "0"
@@ -46,14 +48,16 @@ def scrape(request):
             date = date_mod
             today = int(rows[ i ][ 1 ].replace(",",""))
             year_ago = int(rows[ i ][ 2 ].replace(",",""))
-
+            
             today_day_before = int(rows[ i-1 ][ 1 ].replace(",",""))
             year_ago_day_before = int(rows[ i-1 ][ 2 ].replace(",",""))
             
             difference = round(float((today / year_ago) * 100),2)
-          
-            abs_diff = round(float((today_day_before / year_ago_day_before) * 100),2) - difference
-            abs_diff = round(abs_diff, 2)
+            if i==0:
+                abs_diff =0
+            else:
+                abs_diff = difference - round(float((today_day_before / year_ago_day_before) * 100),2) 
+                abs_diff = round(abs_diff, 2)
 
             Date.objects.create(date=date,today=today,year_ago=year_ago,difference=difference,absolute=abs_diff)
         return HttpResponseRedirect('/')
