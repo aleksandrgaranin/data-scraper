@@ -11,7 +11,7 @@ import csv
 
 def scrape(request):
     if request.method == "POST":
-
+        Date.objects.all().delete()
         page = requests.get('https://www.tsa.gov/coronavirus/passenger-throughput')
         soup = BeautifulSoup(page.text, 'html.parser')
 
